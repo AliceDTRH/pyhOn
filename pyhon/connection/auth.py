@@ -181,12 +181,7 @@ class HonAuth:
             "aura.token": None,
         }
         params = {"r": 3, "other.LightningLoginCustom.login": 1}
-        async with self._request.post(
-            const.AUTH_API + "/s/sfsites/aura",
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            data="&".join(f"{k}={quote(json.dumps(v))}" for k, v in data.items()),
-            params=params,
-        ) as response:
+        async with self._request.post(f"{const.AUTH_API}/s/sfsites/aura", headers={"Content-Type": "application/x-www-form-urlencoded"}, data="&".join(f"{k}={quote(json.dumps(v))}" for k, v in data.items()), params=params) as response:
             if response.status == 200:
                 with suppress(json.JSONDecodeError, KeyError):
                     result = await response.json()

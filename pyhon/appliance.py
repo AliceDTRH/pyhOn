@@ -130,8 +130,7 @@ class HonAppliance:
 
     @property
     def code(self) -> str:
-        code: str = self.info.get("code", "")
-        if code:
+        if code := self.info.get("code", ""):
             return code
         serial_number: str = self.info.get("serialNumber", "")
         return serial_number[:8] if len(serial_number) < 18 else serial_number[:11]
@@ -219,21 +218,18 @@ class HonAppliance:
             for key in command.setting_keys:
                 setting = command.settings.get(key, self._default_setting)
                 result[f"{name}.{key}"] = setting
-        if self._extra:
-            return self._extra.settings(result)
-        return result
+        return self._extra.settings(result) if self._extra else result
 
     @property
     def available_settings(self) -> List[str]:
         result = []
         for name, command in self._commands.items():
-            for key in command.setting_keys:
-                result.append(f"{name}.{key}")
+            result.extend(f"{name}.{key}" for key in command.setting_keys)
         return result
 
     @property
     def data(self) -> Dict[str, Any]:
-        result = {
+        return {
             "attributes": self.attributes,
             "appliance": self.info,
             "statistics": self.statistics,
@@ -241,7 +237,6 @@ class HonAppliance:
             **self.command_parameters,
             **self.attributes,
         }
-        return result
 
     @property
     def diagnose(self) -> str:

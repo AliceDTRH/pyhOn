@@ -133,10 +133,11 @@ class HonCommand:
         return await self.send_parameters(params)
 
     async def send_specific(self, param_names: List[str]) -> bool:
-        params: Dict[str, str | float] = {}
-        for key, parameter in self._parameters.items():
-            if key in param_names or parameter.mandatory:
-                params[key] = parameter.value
+        params: Dict[str, str | float] = {
+            key: parameter.value
+            for key, parameter in self._parameters.items()
+            if key in param_names or parameter.mandatory
+        }
         return await self.send_parameters(params)
 
     async def send_parameters(self, params: Dict[str, str | float]) -> bool:
@@ -163,9 +164,7 @@ class HonCommand:
 
     @property
     def categories(self) -> Dict[str, "HonCommand"]:
-        if self._categories is None:
-            return {"_": self}
-        return self._categories
+        return {"_": self} if self._categories is None else self._categories
 
     @property
     def category(self) -> str:
@@ -188,9 +187,7 @@ class HonCommand:
             second, HonParameterFixed
         ):
             return second
-        if len(second.values) > len(first.values):
-            return second
-        return first
+        return second if len(second.values) > len(first.values) else first
 
     @property
     def available_settings(self) -> Dict[str, Parameter]:
