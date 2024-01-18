@@ -114,10 +114,7 @@ class HonAPI:
         )
         async with self._hon.get(url) as response:
             result: Dict[str, Any] = await response.json()
-        if not result or not result.get("payload"):
-            return []
-        command_history: List[Dict[str, Any]] = result["payload"]["history"]
-        return command_history
+        return result["payload"]["history"] if result and result.get("payload") else []
 
     async def load_favourites(self, appliance: HonAppliance) -> List[Dict[str, Any]]:
         url: str = (
@@ -136,8 +133,7 @@ class HonAPI:
         async with self._hon.get(url, params=params) as response:
             result: Dict[str, Any] = await response.json()
             if result:
-                activity: Dict[str, Any] = result.get("attributes", "")
-                if activity:
+                if activity := result.get("attributes", ""):
                     return activity
         return {}
 
@@ -210,7 +206,7 @@ class HonAPI:
             "applianceType": appliance.appliance_type,
         }
         if command == "startProgram" and program_name:
-            data.update({"programName": program_name.upper()})
+            data["programName"] = program_name.upper()
         url: str = f"{const.API_URL}/commands/v1/send"
         async with self._hon.post(url, json=data) as response:
             json_data: Dict[str, Any] = await response.json()
@@ -328,6 +324,6 @@ class TestAPI(HonAPI):
             "%s - %s - %s",
             str(parameters),
             str(ancillary_parameters),
-            str(program_name),
+            program_name,
         )
         return True

@@ -34,7 +34,7 @@ def pretty_print(
         result += f"{space}{'- ' if is_list else ''}{key}:\n"
         intend += 1
     if isinstance(data, list):
-        for i, value in enumerate(data):
+        for value in data:
             result += pretty_print(
                 value, intend=intend, is_list=True, whitespace=whitespace
             )

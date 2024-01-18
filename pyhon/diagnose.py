@@ -83,8 +83,7 @@ def yaml_export(appliance: "HonAppliance", anonymous: bool = False) -> str:
         "additional_data": appliance.additional_data,
     }
     data |= {n: c.parameter_groups for n, c in appliance.commands.items()}
-    extra = {n: c.data for n, c in appliance.commands.items() if c.data}
-    if extra:
+    if extra := {n: c.data for n, c in appliance.commands.items() if c.data}:
         data |= {"extra_command_data": extra}
     if anonymous:
         for sensible in ["serialNumber", "coords"]:

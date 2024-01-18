@@ -44,8 +44,7 @@ class HonParameterEnum(HonParameter):
 
     @value.setter
     def value(self, value: str) -> None:
-        if value in self.values:
-            self._value = value
-            self.check_trigger(value)
-        else:
+        if value not in self.values:
             raise ValueError(f"Allowed values: {self._values} But was: {value}")
+        self._value = value
+        self.check_trigger(value)

@@ -90,9 +90,7 @@ class HonCommandLoader:
     @staticmethod
     def _clean_name(category: str) -> str:
         """Clean up category name"""
-        if "PROGRAM" in category:
-            return category.split(".")[-1].lower()
-        return category
+        return category.split(".")[-1].lower() if "PROGRAM" in category else category
 
     def _get_commands(self) -> None:
         """Generates HonCommand dict from api data"""
@@ -137,9 +135,7 @@ class HonCommandLoader:
                 categories[self._clean_name(category)] = command
         if categories:
             # setParameters should be at first place
-            if "setParameters" in categories:
-                return categories["setParameters"]
-            return list(categories.values())[0]
+            return categories.get("setParameters", list(categories.values())[0])
         return None
 
     def _get_last_command_index(self, name: str) -> Optional[int]:
